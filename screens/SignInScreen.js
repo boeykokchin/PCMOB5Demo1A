@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,16 +8,44 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Keyboard,
-} from "react-native";
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
+const API = 'https://boeykokchin.pythonanywhere.com';
+const API_LOGIN = '/auth';
 
 export default function SignInScreen({ navigation }) {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [errorText, setErrorText] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorText, setErrorText] = useState('');
+
+  async function login() {
+    console.log('---- Login time ----');
+    Keyboard.dismiss();
+
+    try {
+      const response = await axios.post(API + API_LOGIN, {
+        username,
+        password,
+      });
+      console.log('Success logging in!');
+      console.log(response);
+
+      AsyncStorage.setItem('token', response.data.access_token);
+      navigation.navigate('Account');
+    } catch (error) {
+      console.log('Error logging in!');
+      console.log(error.response);
+
+      setErrorText(error.response.data.description);
+    }
+  }
 
   function login() {
     Keyboard.dismiss();
-    // do stuff here to log in
+    AsyncStorage.setItem('token', 'demo_token');
+    navigation.navigate('Account');
   }
 
   return (
@@ -27,7 +55,7 @@ export default function SignInScreen({ navigation }) {
         <Text style={styles.fieldTitle}>Username</Text>
         <TextInput
           style={styles.input}
-          autoCapitalize="none"
+          autoCapitalize='none'
           autoCorrect={false}
           value={username}
           onChangeText={(input) => setUsername(input)}
@@ -35,8 +63,8 @@ export default function SignInScreen({ navigation }) {
         <Text style={styles.fieldTitle}>Password</Text>
         <TextInput
           style={styles.input}
-          autoCapitalize="none"
-          autoCompleteType="password"
+          autoCapitalize='none'
+          autoCompleteType='password'
           autoCorrect={false}
           secureTextEntry={true}
           value={password}
@@ -54,12 +82,12 @@ export default function SignInScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: 'center',
     padding: 24,
   },
   title: {
     fontSize: 36,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 24,
   },
   fieldTitle: {
@@ -67,29 +95,29 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   input: {
-    borderColor: "#999",
+    borderColor: '#999',
     borderWidth: 1,
     marginBottom: 24,
     padding: 4,
     height: 36,
     fontSize: 18,
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   loginButton: {
-    backgroundColor: "blue",
+    backgroundColor: 'blue',
     width: 120,
-    alignItems: "center",
+    alignItems: 'center',
     padding: 18,
     marginTop: 12,
     marginBottom: 36,
   },
   buttonText: {
-    color: "white",
-    fontWeight: "bold",
+    color: 'white',
+    fontWeight: 'bold',
     fontSize: 18,
   },
   errorText: {
-    color: "red",
+    color: 'red',
     height: 40,
   },
 });
