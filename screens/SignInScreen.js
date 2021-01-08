@@ -42,11 +42,11 @@ export default function SignInScreen({ navigation }) {
     }
   }
 
-  function login() {
-    Keyboard.dismiss();
-    AsyncStorage.setItem('token', 'demo_token');
-    navigation.navigate('Account');
-  }
+  // function login() {
+  //   Keyboard.dismiss();
+  //   AsyncStorage.setItem('token', 'demo_token');
+  //   navigation.navigate('Account');
+  // }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
