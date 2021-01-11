@@ -11,7 +11,7 @@ export default function AccountScreen({ navigation }) {
 
   return (
     <View style={commonStyles.container}>
-      <Text> Account Screen </Text>
+      <Text>Account Screen</Text>
       <Button title='Sign out' onPress={signOut} />
     </View>
   );
